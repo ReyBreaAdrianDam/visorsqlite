@@ -5,8 +5,6 @@
  */
 package com.mycompany.tablas;
 import com.formdev.flatlaf.intellijthemes.*;
-import com.formdev.flatlaf.intellijthemes.materialthemeuilite.*;
-import com.formdev.flatlaf.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -61,14 +59,14 @@ public class Aplicacion extends javax.swing.JFrame {
     public void ejecutarConsulta() {
         try {
 
-            if (EjecutarConsulta.Ejecutar(sentencia.getText(), baseDeDatos)) {
-                jTable1.setModel(new Modelo(baseDeDatos, modelo.getTablaActual(), sentencia.getText()));
+            if (EjecutarConsulta.Ejecutar(jTextArea1.getText(), baseDeDatos)) {
+                jTable1.setModel(new Modelo(baseDeDatos, modelo.getTablaActual(), jTextArea1.getText()));
             } else {
                 jTable1.setModel(new Modelo(baseDeDatos));
             }
 
             initInformacion();
-        } catch (SQLException ignored) {/*aqui salta excepcion si es select, pero como no se como controlarlo pues xd*/
+        } catch (SQLException ignored) {
         }
 
     }
@@ -152,12 +150,13 @@ public class Aplicacion extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        sentencia = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTree1 = new javax.swing.JTree();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         enviarInfo = new javax.swing.JButton();
         tablaSelec = new javax.swing.JLabel("", SwingConstants.CENTER);
         baseSelec = new javax.swing.JLabel("", SwingConstants.CENTER);
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTree1 = new javax.swing.JTree();
         menuAplicacion = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jAbrir = new javax.swing.JMenuItem();
@@ -168,19 +167,20 @@ public class Aplicacion extends javax.swing.JFrame {
         jAltoContraste = new javax.swing.JMenuItem();
         jWindowsTheme = new javax.swing.JMenuItem();
         jMenuTablas = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImage(getIconImage());
 
         jTable1.setModel(new Modelo());
-        jTable1.setFont(new Font("Courier new", Font.BOLD, 14));
+        //jTable1.setFont(new Font("Courier new", Font.BOLD, 14));
         jScrollPane1.setViewportView(jTable1);
 
-        sentencia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sentenciaActionPerformed(evt);
-            }
-        });
+        jScrollPane2.setViewportView(jTree1);
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane3.setViewportView(jTextArea1);
 
         enviarInfo.setText("Ejecutar");
         enviarInfo.addActionListener(new java.awt.event.ActionListener() {
@@ -192,8 +192,6 @@ public class Aplicacion extends javax.swing.JFrame {
         tablaSelec.setFont(new Font("Arial", Font.BOLD, 12));
 
         baseSelec.setFont(new Font("Arial", Font.BOLD, 12));
-
-        jScrollPane2.setViewportView(jTree1);
 
         menuAplicacion.setFont(new Font("Courier new", Font.BOLD, 14));
 
@@ -256,6 +254,9 @@ public class Aplicacion extends javax.swing.JFrame {
         jMenuTablas.setText("Tablas");
         menuAplicacion.add(jMenuTablas);
 
+        jMenu3.setText("Opciones");
+        menuAplicacion.add(jMenu3);
+
         setJMenuBar(menuAplicacion);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -265,34 +266,36 @@ public class Aplicacion extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(baseSelec, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tablaSelec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(sentencia, javax.swing.GroupLayout.DEFAULT_SIZE, 891, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(enviarInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jScrollPane2)
-                            .addComponent(baseSelec, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
-                            .addComponent(tablaSelec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 832, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(enviarInfo)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tablaSelec, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-                    .addComponent(baseSelec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(tablaSelec, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(baseSelec, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(sentencia, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
-                    .addComponent(enviarInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(enviarInfo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -366,13 +369,29 @@ public class Aplicacion extends javax.swing.JFrame {
         SwingUtilities.updateComponentTreeUI(this);
     }//GEN-LAST:event_jAltoContrasteActionPerformed
 
-    private void sentenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sentenciaActionPerformed
-        // TODO add your handling code here:
-        ejecutarConsulta();
-    }//GEN-LAST:event_sentenciaActionPerformed
-
     private void enviarInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarInfoActionPerformed
-        ejecutarConsulta();
+        
+        String sentencia = jTextArea1.getText().replace("\n", " ");
+        switch(sentencia.toLowerCase()){
+            case "hello there!":
+                JOptionPane.showMessageDialog(null, "General Kenobi", "General Grievous", JOptionPane.DEFAULT_OPTION);
+                break;
+            case "its over anakin! i have the high ground":
+                JOptionPane.showMessageDialog(null, "You understimate my power", "Anakin", JOptionPane.DEFAULT_OPTION);
+                JOptionPane.showMessageDialog(null, "Don't try it", "Kenobi", JOptionPane.DEFAULT_OPTION);
+                JOptionPane.showMessageDialog(null, "GRAAAAAH", "Anakin", JOptionPane.DEFAULT_OPTION);
+                JOptionPane.showMessageDialog(null, "You were the chosen one! It was said thay you would, destroy the Sith, not join them", "Kenobi", JOptionPane.DEFAULT_OPTION);
+                JOptionPane.showMessageDialog(null, "It was you who would bring balance to the Force, not leave it in darkness", "Kenobi", JOptionPane.DEFAULT_OPTION);
+                JOptionPane.showMessageDialog(null, "I HATE YOU", "Anakin", JOptionPane.DEFAULT_OPTION);
+                JOptionPane.showMessageDialog(null, "You were my brother, Anakin. I loved you", "Kenobi", JOptionPane.DEFAULT_OPTION);
+                break;
+            default:
+                 ejecutarConsulta();
+                 break;
+        }
+        
+        
+       
     }//GEN-LAST:event_enviarInfoActionPerformed
 
     private void jWindowsThemeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jWindowsThemeActionPerformed
@@ -427,15 +446,17 @@ public class Aplicacion extends javax.swing.JFrame {
     private javax.swing.JMenuItem jClaro;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenuTablas;
     private javax.swing.JMenuItem jOscuro;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTree jTree1;
     private javax.swing.JMenuItem jWindowsTheme;
     private javax.swing.JMenuBar menuAplicacion;
-    private javax.swing.JTextField sentencia;
     private javax.swing.JLabel tablaSelec;
     // End of variables declaration//GEN-END:variables
 }
