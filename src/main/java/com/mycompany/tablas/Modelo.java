@@ -16,7 +16,7 @@ public class Modelo extends AbstractTableModel{
    VerDatos dat;
     private File file;
    public Modelo(){
-       dat = new VerDatos(new File("Z:/db/sqlite/ejemplo.db"), "","");
+       dat = new VerDatos(new File("chinook.db"), "","");
    }
    
    public Modelo(File file){

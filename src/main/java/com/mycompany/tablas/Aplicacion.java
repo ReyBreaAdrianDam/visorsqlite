@@ -36,7 +36,6 @@ public class Aplicacion extends javax.swing.JFrame {
         this.setTitle("Tablas");
         this.setUndecorated(true);
         this.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
-        this.setMinimumSize(new Dimension(507, 328));
         initComponents();
         initInformacion();
         generarArbol();
@@ -62,10 +61,15 @@ public class Aplicacion extends javax.swing.JFrame {
             if (EjecutarConsulta.Ejecutar(jTextArea1.getText(), baseDeDatos)) {
                 jTable1.setModel(new Modelo(baseDeDatos, modelo.getTablaActual(), jTextArea1.getText()));
             } else {
-                jTable1.setModel(new Modelo(baseDeDatos));
+                try{
+                    jTable1.setModel(new Modelo(baseDeDatos, modelo.getTablaActual()));
+                }
+                catch(Exception ex){
+                    jTable1.setModel(new Modelo(baseDeDatos));
+                }
             }
-
             initInformacion();
+            generarArbol();
         } catch (SQLException ignored) {
         }
 
@@ -109,7 +113,7 @@ public class Aplicacion extends javax.swing.JFrame {
         baseSelec.setText("Tabla sel.: " + modelo.getFichero().getName());
         for (int i = 0; i < jTable1.getColumnCount(); i++) {
             JTableHeader th = jTable1.getTableHeader();
-            th.setFont(new Font("Courier new", Font.BOLD, 14));
+            th.setFont(new Font("Arial", Font.BOLD, 14));
             TableColumnModel tcm = th.getColumnModel();
             TableColumn tc = tcm.getColumn(i);
             try {
@@ -157,6 +161,7 @@ public class Aplicacion extends javax.swing.JFrame {
         enviarInfo = new javax.swing.JButton();
         tablaSelec = new javax.swing.JLabel("", SwingConstants.CENTER);
         baseSelec = new javax.swing.JLabel("", SwingConstants.CENTER);
+        jBorrarTexto = new javax.swing.JButton();
         menuAplicacion = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jAbrir = new javax.swing.JMenuItem();
@@ -165,23 +170,27 @@ public class Aplicacion extends javax.swing.JFrame {
         jOscuro = new javax.swing.JMenuItem();
         jClaro = new javax.swing.JMenuItem();
         jAltoContraste = new javax.swing.JMenuItem();
-        jWindowsTheme = new javax.swing.JMenuItem();
+        jThemeDefault = new javax.swing.JMenuItem();
         jMenuTablas = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImage(getIconImage());
+        setMinimumSize(new java.awt.Dimension(850, 350));
 
         jTable1.setModel(new Modelo());
+        jTable1.setName(""); // NOI18N
+        jTable1.setShowGrid(false);
         //jTable1.setFont(new Font("Courier new", Font.BOLD, 14));
         jScrollPane1.setViewportView(jTable1);
 
         jScrollPane2.setViewportView(jTree1);
 
         jTextArea1.setColumns(20);
+        jTextArea1.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
         jTextArea1.setRows(5);
         jScrollPane3.setViewportView(jTextArea1);
 
+        enviarInfo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         enviarInfo.setText("Ejecutar");
         enviarInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -189,9 +198,22 @@ public class Aplicacion extends javax.swing.JFrame {
             }
         });
 
-        tablaSelec.setFont(new Font("Arial", Font.BOLD, 12));
+        tablaSelec.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        tablaSelec.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        tablaSelec.setToolTipText("");
 
-        baseSelec.setFont(new Font("Arial", Font.BOLD, 12));
+        baseSelec.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        baseSelec.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        baseSelec.setAlignmentY(0.0F);
+
+        jBorrarTexto.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jBorrarTexto.setText("Borrar texto");
+        enviarInfo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jBorrarTexto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBorrarTextoActionPerformed(evt);
+            }
+        });
 
         menuAplicacion.setFont(new Font("Courier new", Font.BOLD, 14));
 
@@ -241,21 +263,18 @@ public class Aplicacion extends javax.swing.JFrame {
         });
         jMenu2.add(jAltoContraste);
 
-        jWindowsTheme.setText("Windows");
-        jWindowsTheme.addActionListener(new java.awt.event.ActionListener() {
+        jThemeDefault.setText("Por Defecto");
+        jThemeDefault.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jWindowsThemeActionPerformed(evt);
+                jThemeDefaultActionPerformed(evt);
             }
         });
-        jMenu2.add(jWindowsTheme);
+        jMenu2.add(jThemeDefault);
 
         menuAplicacion.add(jMenu2);
 
         jMenuTablas.setText("Tablas");
         menuAplicacion.add(jMenuTablas);
-
-        jMenu3.setText("Opciones");
-        menuAplicacion.add(jMenu3);
 
         setJMenuBar(menuAplicacion);
 
@@ -270,32 +289,33 @@ public class Aplicacion extends javax.swing.JFrame {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tablaSelec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 862, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 832, Short.MAX_VALUE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(enviarInfo)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                        .addComponent(enviarInfo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBorrarTexto)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tablaSelec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(tablaSelec, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(baseSelec, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(enviarInfo)
+                        .addComponent(jBorrarTexto))
+                    .addComponent(tablaSelec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(baseSelec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(enviarInfo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -394,7 +414,7 @@ public class Aplicacion extends javax.swing.JFrame {
        
     }//GEN-LAST:event_enviarInfoActionPerformed
 
-    private void jWindowsThemeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jWindowsThemeActionPerformed
+    private void jThemeDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jThemeDefaultActionPerformed
 
         try {
             if(this.isUndecorated()){
@@ -414,7 +434,12 @@ public class Aplicacion extends javax.swing.JFrame {
         } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(Aplicacion.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jWindowsThemeActionPerformed
+    }//GEN-LAST:event_jThemeDefaultActionPerformed
+
+    private void jBorrarTextoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBorrarTextoActionPerformed
+        // TODO add your handling code here:
+        jTextArea1.setText(null);
+    }//GEN-LAST:event_jBorrarTextoActionPerformed
     
 
     /**
@@ -442,11 +467,11 @@ public class Aplicacion extends javax.swing.JFrame {
     private javax.swing.JButton enviarInfo;
     private javax.swing.JMenuItem jAbrir;
     private javax.swing.JMenuItem jAltoContraste;
+    private javax.swing.JButton jBorrarTexto;
     private javax.swing.JMenuItem jCerrar;
     private javax.swing.JMenuItem jClaro;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenuTablas;
     private javax.swing.JMenuItem jOscuro;
     private javax.swing.JScrollPane jScrollPane1;
@@ -454,8 +479,8 @@ public class Aplicacion extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JMenuItem jThemeDefault;
     private javax.swing.JTree jTree1;
-    private javax.swing.JMenuItem jWindowsTheme;
     private javax.swing.JMenuBar menuAplicacion;
     private javax.swing.JLabel tablaSelec;
     // End of variables declaration//GEN-END:variables
