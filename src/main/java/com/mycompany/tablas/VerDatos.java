@@ -55,6 +55,12 @@ public class VerDatos {
     }
 
     private void conectar() throws SQLException {
+        try{
+            Class.forName("org.sqlite.JDBC");
+        }
+        catch(ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
         cn = DriverManager.getConnection("jdbc:sqlite:" + fichero.getPath(), "", "");
         st = cn.createStatement();
     }

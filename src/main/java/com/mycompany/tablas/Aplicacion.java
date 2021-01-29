@@ -107,7 +107,9 @@ public class Aplicacion extends javax.swing.JFrame {
      * Metodo para generar la informacion de la aplicacion y demas cosas
      */
       private void initInformacion() {
-        jMenuTablas.removeAll();
+            jMenuTablas.removeAll();
+        
+        
         modelo = (Modelo) jTable1.getModel();
         tablaSelec.setText("Tabla seleccionada: " + modelo.getTablaActual());
         baseSelec.setText("Tabla sel.: " + modelo.getFichero().getName());
@@ -341,8 +343,11 @@ public class Aplicacion extends javax.swing.JFrame {
             File file = fc.getSelectedFile();
             try {
                 jTable1.setModel(new Modelo(file));
-                initInformacion();
-                generarArbol();
+                if(jMenuTablas != null){
+                    initInformacion();
+                    generarArbol();
+                }
+                
             } catch (Exception e) {
 
                 JOptionPane.showMessageDialog(null, "Fichero no valido, o base de datos sin tablas", "ERROR de archivo", JOptionPane.ERROR_MESSAGE);
