@@ -154,6 +154,11 @@ public class Aplicacion extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        try{
+            jTable1.setModel(new Modelo());
+        }
+        catch(Exception ex){
+            abrir();}
         jScrollPane2 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -177,7 +182,6 @@ public class Aplicacion extends javax.swing.JFrame {
         setIconImage(getIconImage());
         setMinimumSize(new java.awt.Dimension(850, 350));
 
-        jTable1.setModel(new Modelo());
         jTable1.setName(""); // NOI18N
         jTable1.setShowGrid(false);
         //jTable1.setFont(new Font("Courier new", Font.BOLD, 14));
@@ -326,7 +330,10 @@ public class Aplicacion extends javax.swing.JFrame {
     
     private void jAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAbrirActionPerformed
         // TODO add your handling code here:
-        JFileChooser fc = new JFileChooser();
+        abrir();
+    }//GEN-LAST:event_jAbrirActionPerformed
+    private void abrir(){
+    JFileChooser fc = new JFileChooser();
         fc.setFileFilter(new FileNameExtensionFilter("Bases de datos *.db", "db"));
         int returnVal = fc.showOpenDialog(Aplicacion.this);
 
@@ -342,8 +349,7 @@ public class Aplicacion extends javax.swing.JFrame {
             }
 
         }
-    }//GEN-LAST:event_jAbrirActionPerformed
-
+    }
     private void jCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCerrarActionPerformed
         // TODO add your handling code here:
         this.dispose();
